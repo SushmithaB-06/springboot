@@ -1,0 +1,285 @@
+📌 What is JDBC?
+
+JDBC (Java Database Connectivity) is a Java API that enables Java applications to communicate with relational databases.
+
+It acts as a bridge between Java programs and databases, allowing developers to execute SQL queries and retrieve results.
+
+Through JDBC, a Java application can:
+
+Connect to a database
+
+Execute SQL queries
+
+Retrieve data from tables
+
+Perform CRUD operations
+
+Manage database transactions
+
+Example database used in this project: PostgreSQL
+
+
+
+
+🛠 Tools Used
+Database
+
+PostgreSQL
+
+A powerful open-source relational database used to:
+
+Store structured data
+
+Execute SQL queries
+
+Manage tables and records
+
+Example table used:
+
+id	name	marks
+1	Ram	90
+2	Ravi	85
+
+
+
+
+Database Management Tool
+
+pgAdmin
+
+A graphical interface used to manage PostgreSQL databases.
+
+Used for:
+
+Creating databases
+
+Creating tables
+
+Inserting records
+
+Running SQL queries
+
+Viewing stored data
+
+
+
+
+
+⚙ JDBC Architecture
+
+The communication flow between Java and the database is:
+
+Java Application
+        ↓
+     JDBC API
+        ↓
+   JDBC Driver
+        ↓
+PostgreSQL Database
+
+
+
+
+Components
+
+Java Application
+The program written in Java that interacts with the database.
+
+JDBC API
+Provides interfaces and classes used to interact with databases.
+
+JDBC Driver
+Acts as a translator between Java and the database.
+
+Database
+Stores and manages the actual data.
+
+
+
+
+
+
+🔄 JDBC Workflow (Step-by-Step)
+
+
+1. Import JDBC Packages
+import java.sql.*;
+
+This imports JDBC classes like:
+
+Connection
+
+Statement
+
+PreparedStatement
+
+ResultSet
+
+
+
+2. Load the Driver
+Class.forName("org.postgresql.Driver");
+
+Loads the PostgreSQL JDBC driver into memory.
+
+
+
+3. Register the Driver
+
+The driver registers itself with DriverManager.
+
+DriverManager manages database drivers and connections.
+
+
+
+4. Create Connection
+Connection con = DriverManager.getConnection(
+"jdbc:postgresql://localhost:5432/Demo",
+"postgres",
+"password"
+);
+
+This establishes a connection between the Java application and PostgreSQL database server.
+
+
+
+5. Create Statement
+Statement st = con.createStatement();
+
+The Statement object allows the program to send SQL queries.
+
+
+
+6. Execute SQL Query
+ResultSet rs = st.executeQuery("SELECT * FROM student");
+
+The database executes the query and returns the result.
+
+
+
+7. Process Results
+while(rs.next()){
+    System.out.println(rs.getInt(1)+" "+rs.getString(2));
+}
+
+The program reads records returned by the database.
+
+
+
+8. Close Connection
+con.close();
+
+Closing the connection releases database resources.
+
+
+
+
+📊 CRUD Operations Using JDBC
+
+CRUD operations represent the basic operations performed on database data.
+
+Operation	   SQL Command	   Description
+Create	     INSERT         	Add new records
+Read	       SELECT	           Retrieve data
+Update	     UPDATE            Modify existing data
+Delete	     DELETE	            Remove records
+
+Example SQL queries:
+
+INSERT INTO student VALUES (1, 'Ram', 90);
+
+SELECT * FROM student;
+
+UPDATE student SET marks = 95 WHERE id = 1;
+
+DELETE FROM student WHERE id = 1;
+
+
+
+
+🔒 PreparedStatement
+
+PreparedStatement is used for precompiled SQL queries with parameters.
+
+Advantages
+
+Prevents SQL Injection
+
+Improves performance
+
+Allows dynamic input values
+
+Example:
+
+PreparedStatement ps =
+con.prepareStatement("INSERT INTO student VALUES (?, ?, ?)");
+
+ps.setInt(1, 1);
+ps.setString(2, "Ram");
+ps.setInt(3, 90);
+
+ps.executeUpdate();
+
+
+
+
+🌍 Real World Use Case
+
+Example: Student Registration System
+
+When a student registers in an application:
+
+INSERT INTO student VALUES(...)
+
+Process flow:
+
+Java Application
+      ↓
+JDBC Driver
+      ↓
+PostgreSQL Database
+      ↓
+Data Stored in Table
+
+
+
+
+🎯 Key Learning Outcomes
+
+By completing this topic, the following concepts were understood:
+
+How Java connects to databases
+
+Understanding JDBC architecture
+
+Using JDBC drivers
+
+Executing SQL queries through Java
+
+Processing database results
+
+Implementing CRUD operations
+
+Using PreparedStatement for secure queries
+
+
+
+
+
+🧠 Conclusion
+
+JDBC provides a standard way for Java applications to interact with relational databases.
+
+Using JDBC, developers can:
+
+Establish database connections
+
+Execute SQL queries
+
+Retrieve data from databases
+
+Perform CRUD operations
+
+In simple terms:
+
+JDBC enables Java applications to store, retrieve, and manage data in relational databases.
