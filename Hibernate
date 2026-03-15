@@ -1,0 +1,416 @@
+# Hibernate – Quick Revision Notes
+
+## 1. What is Hibernate
+
+Hibernate is an Object Relational Mapping (ORM) framework for Java that simplifies interaction between Java applications and relational databases.
+
+ORM maps Java objects to database tables so developers can work with objects instead of writing SQL queries manually.
+
+Example mapping:
+
+Java class
+
+```
+@Entity
+public class student {
+    @Id
+    int rollNo;
+    String name;
+}
+```
+
+Database table
+
+```
+student
+--------
+rollNo
+name
+```
+
+Hibernate automatically converts Java object operations into SQL queries.
+
+---
+
+## 2. Why Hibernate is Used
+
+Problems with JDBC:
+
+* Requires writing SQL queries manually
+* Large amount of boilerplate code
+* Manual mapping between objects and tables
+* Harder to maintain in large systems
+
+Hibernate advantages:
+
+* Automatic SQL generation
+* Object-oriented database interaction
+* Reduced code complexity
+* Built-in caching support
+* Database independence
+
+---
+
+## 3. JDBC vs Hibernate
+
+| Feature                  | JDBC          | Hibernate                |
+| ------------------------ | ------------- | ------------------------ |
+| Query writing            | Manual SQL    | Automatic SQL generation |
+| Code size                | Large         | Smaller                  |
+| Mapping                  | Manual        | Automatic                |
+| Performance optimization | Manual        | Built-in features        |
+| Caching                  | Not available | Available                |
+| Maintenance              | Harder        | Easier                   |
+
+Example:
+
+JDBC
+
+```
+PreparedStatement ps =
+con.prepareStatement("insert into student values(?,?,?)");
+```
+
+Hibernate
+
+```
+session.persist(student);
+```
+
+Hibernate internally converts object operations into SQL queries.
+
+---
+
+## 4. How Hibernate Works
+
+Architecture flow:
+
+```
+Java Application
+       ↓
+Hibernate Framework
+       ↓
+JDBC
+       ↓
+Database (PostgreSQL / MySQL / etc.)
+```
+
+Hibernate internally uses JDBC but hides its complexity.
+
+---
+
+## 5. Hibernate Architecture
+
+Main components:
+
+```
+Application
+     ↓
+Configuration
+     ↓
+SessionFactory
+     ↓
+Session
+     ↓
+Transaction
+     ↓
+Database
+```
+
+Each component has a specific role in managing database interaction.
+
+---
+
+## 6. Important Hibernate Terms
+
+### Entity
+
+An entity is a Java class mapped to a database table.
+
+```
+@Entity
+public class student
+```
+
+### SessionFactory
+
+A heavy object responsible for creating sessions.
+Created once for the entire application.
+
+```
+SessionFactory sf = cfg.buildSessionFactory();
+```
+
+### Session
+
+Represents a connection between the application and the database.
+
+```
+Session session = sf.openSession();
+```
+
+Used for performing operations like:
+
+* Insert
+* Update
+* Delete
+* Fetch
+
+### Transaction
+
+Ensures that database operations are executed safely and consistently.
+
+```
+session.beginTransaction();
+session.persist(student);
+session.getTransaction().commit();
+```
+
+Without a transaction, database changes may not be saved properly.
+
+---
+
+## 7. Basic Hibernate Operations (CRUD)
+
+Insert
+
+```
+session.persist(student);
+```
+
+Fetch
+
+```
+student s = session.get(student.class, 101);
+```
+
+Update
+
+```
+student s = session.get(student.class,101);
+s.setsName("Updated");
+session.update(s);
+```
+
+Delete
+
+```
+student s = session.get(student.class,101);
+session.remove(s);
+```
+
+---
+
+## 8. Changing Table or Column Name
+
+Sometimes the class name and table name are different.
+
+Table mapping:
+
+```
+@Entity
+@Table(name="student_table")
+```
+
+Column mapping:
+
+```
+@Column(name="student_name")
+private String name;
+```
+
+---
+
+## 9. Embeddable Mapping
+
+Used when one class is embedded inside another entity.
+
+Example: Address inside Student.
+
+```
+@Embeddable
+class Address {
+   String city;
+   String state;
+}
+```
+
+Inside the entity:
+
+```
+@Embedded
+Address address;
+```
+
+---
+
+## 10. Relationship Mapping
+
+Used when tables are related to each other.
+
+### One-to-One
+
+Example: Person ↔ Passport
+
+```
+@OneToOne
+Passport passport;
+```
+
+### One-to-Many
+
+Example: Department → Employees
+
+```
+@OneToMany
+List<Employee> employees;
+```
+
+### Many-to-One
+
+Example: Many students belong to one department
+
+```
+@ManyToOne
+Department dept;
+```
+
+### Many-to-Many
+
+Example: Students ↔ Courses
+
+```
+@ManyToMany
+List<Course> courses;
+```
+
+Hibernate automatically creates a join table for many-to-many relationships.
+
+---
+
+## 11. Lazy vs Eager Fetch
+
+### Lazy Fetch
+
+Data is loaded only when it is needed.
+
+Example:
+Student loads first
+Courses load later when accessed
+
+Improves performance.
+
+### Eager Fetch
+
+All related data loads immediately.
+
+Example:
+Student and courses load together.
+
+Can reduce performance for large datasets.
+
+---
+
+## 12. Hibernate Caching
+
+Hibernate supports two levels of caching.
+
+### First-Level Cache
+
+Default cache at the session level.
+
+```
+Session → Cache → Database
+```
+
+Prevents repeated database queries in the same session.
+
+### Second-Level Cache
+
+Shared cache across multiple sessions.
+
+Common implementation:
+Ehcache
+
+Helps improve performance by reducing database access.
+
+---
+
+## 13. Fetching Specific Properties
+
+Instead of retrieving the entire object, specific fields can be fetched.
+
+Example SQL:
+
+```
+SELECT name FROM student
+```
+
+Using Hibernate Query Language (HQL):
+
+```
+Query q = session.createQuery("select sName from student");
+```
+
+---
+
+## 14. HQL vs SQL
+
+| Feature  | SQL                   | HQL             |
+| -------- | --------------------- | --------------- |
+| Works on | Database tables       | Java classes    |
+| Syntax   | Database specific     | Object-oriented |
+| Example  | SELECT * FROM student | FROM student    |
+
+---
+
+## 15. Indexing (SQL Concept)
+
+Indexes improve database query performance.
+
+Example:
+
+```
+CREATE INDEX idx_name ON student(name);
+```
+
+Indexes help speed up searches in large datasets.
+
+---
+
+## 16. Where Hibernate is Used
+
+Hibernate is commonly used in backend applications built with Java.
+
+Typical backend stack:
+
+```
+Spring Boot
+     ↓
+Hibernate / JPA
+     ↓
+Database
+```
+
+Hibernate simplifies database interaction in large-scale enterprise applications.
+
+---
+
+## Key Topics to Understand Before Spring Boot
+
+Before moving to Spring Boot, ensure understanding of:
+
+* ORM concept
+* Entity mapping
+* SessionFactory and Session
+* Transactions
+* CRUD operations
+* Table and column mapping
+* Embeddable objects
+* Relationship mappings
+* Lazy vs eager fetching
+* Hibernate caching
+* HQL queries
+* Basic SQL optimization concepts like indexing
+
+Mastering these topics provides a strong foundation for learning Spring Boot and building scalable backend applications.
