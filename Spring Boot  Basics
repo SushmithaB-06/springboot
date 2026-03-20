@@ -1,0 +1,189 @@
+Spring & Spring Boot – Beginner Notes
+1. Introduction to Spring
+
+Spring is a Java framework used to build enterprise-level applications.
+
+It provides support for:
+
+Dependency management
+
+Web development
+
+Database access
+
+Security
+
+Core idea:
+Spring helps developers write loosely coupled and maintainable code.
+
+2. Introduction to Spring Boot
+
+Spring Boot is built on top of Spring to simplify application development.
+
+It provides:
+
+Faster development
+
+Minimal configuration
+
+Reduced boilerplate code
+
+Concept:
+Spring = Core framework
+Spring Boot = Simplified version with ready-to-use setup
+
+3. Spring vs Spring Boot
+Feature                 	Spring	                         Spring Boot
+Setup	                    Complex                           	Easy
+Configuration          	Manual (XML/Java)	                 Auto-configuration
+Server                 	External server required	         Embedded server
+Development                 Speed	Slower	                   Faster
+Boilerplate Code	              More	                        Less
+
+4. Spring Boot Core Features
+Auto Configuration
+
+Automatically configures the application based on dependencies.
+
+Starter Dependencies
+
+Predefined dependency sets:
+
+spring-boot-starter-web
+
+spring-boot-starter-data-jpa
+
+Embedded Server
+
+No need to install external servers like Tomcat.
+
+Production Ready Features
+
+Includes monitoring, metrics, and health checks.
+
+5. IOC (Inversion of Control)
+
+IOC means the framework controls object creation instead of the developer.
+
+Without Spring:
+
+Car car = new Car();
+
+With Spring:
+Spring creates and manages objects.
+
+Benefits:
+
+Reduces tight coupling
+
+Improves flexibility
+
+6. DI (Dependency Injection)
+
+DI is a technique where dependencies are provided to a class instead of being created inside it.
+
+Example:
+
+class Engine {}
+
+class Car {
+    Engine engine;
+
+    Car(Engine engine) {
+        this.engine = engine;
+    }
+}
+
+Spring injects the required dependency automatically.
+
+7. IOC vs DI
+IOC	DI
+Concept	Implementation
+Controls object creation	Injects dependencies
+High-level idea	Practical usage
+8. Autowiring
+
+Autowiring is automatic dependency injection performed by Spring.
+
+Example:
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+class Engine {}
+
+@Component
+class Car {
+
+    @Autowired
+    Engine engine;
+}
+9. Why Autowiring?
+
+Removes manual object creation
+
+Reduces boilerplate code
+
+Improves readability
+
+Easier maintenance
+
+10. Project Structure
+src/
+ └── main/
+     └── java/
+         └── com.example.demo/
+             ├── DemoApplication.java
+             └── HelloController.java
+11. Main Application Class
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+
+@SpringBootApplication includes:
+
+Auto-configuration
+
+Component scanning
+
+Configuration setup
+
+12. Running the Application
+
+Steps:
+
+Create project using https://start.spring.io
+
+Add dependency: spring-boot-starter-web
+
+Open in IntelliJ IDEA
+
+Run DemoApplication.java
+
+Output:
+
+Tomcat started on port 8080
+13. First REST API
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HelloController {
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello Spring Boot!";
+    }
+}
+
+Access in browser:
+
+http://localhost:8080/hello
